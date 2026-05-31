@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, DM_Sans } from "next/font/google";
 import "./globals.css";
+import ReduxProvider from "@/redux/provider";
+import AdminLayout from "@/components/AdminLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,6 +12,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const dm_sans = DM_Sans({
+  variable: "--font-DmSans",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -24,10 +32,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${dm_sans.variable} ${geistMono.variable} antialiased`}>
+        <ReduxProvider>
+          <AdminLayout>{children}</AdminLayout>
+        </ReduxProvider>
       </body>
     </html>
   );
