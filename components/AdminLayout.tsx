@@ -60,6 +60,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           <Link href="/categories">Categories</Link>
           <Link href="/magazines">Magazines</Link>
           <Link href="/authors">Authors</Link>
+          <Link href="/users">Users</Link>
           <Link href="/permissions">Permissions</Link>
         </nav>
 
