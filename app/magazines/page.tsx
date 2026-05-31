@@ -6,13 +6,27 @@ import {
   useDeleteMagazineMutation,
 } from "@/services/magazineApi";
 import { Magazine } from "@/types/magazine";
+import { message, Modal } from "antd";
 
 const MagazinesPage = () => {
   const { data, isLoading, isError } = useGetMagazinesQuery();
   const [deleteMagazine] = useDeleteMagazineMutation();
 
-  const handleDelete = async (id: string) => {
-    await deleteMagazine(id);
+  const handleDelete = (id: string) => {
+    Modal.confirm({
+      title: "Delete magazine?",
+      content: "This action cannot be undone.",
+      okText: "Delete",
+      okType: "danger",
+      onOk: async () => {
+        try {
+          await deleteMagazine(id).unwrap();
+          message.success("Magazine deleted");
+        } catch {
+          message.error("Failed to delete magazine");
+        }
+      },
+    });
   };
 
   if (isLoading) return <p className="p-10">Loading...</p>;
@@ -33,8 +47,11 @@ const MagazinesPage = () => {
 
       <div className="bg-white shadow rounded-xl p-4">
         {data?.map((mag: Magazine) => (
-          <div key={mag.id} className="flex justify-between border-b border-gray-300 py-3">
-            <span className="text-black ">{mag.title}</span>
+          <div
+            key={mag.id}
+            className="flex justify-between border-b border-gray-300 py-3"
+          >
+            <span className="text-black">{mag.title}</span>
 
             <div className="flex gap-3">
               <Link href={`/magazines/${mag.id}`} className="text-blue-500">

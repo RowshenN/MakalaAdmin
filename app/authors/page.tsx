@@ -5,14 +5,27 @@ import {
   useGetAuthorsQuery,
   useDeleteAuthorMutation,
 } from "@/services/authorApi";
-
+import { message, Modal } from "antd";
 
 const AuthorsPage = () => {
   const { data, isLoading, isError } = useGetAuthorsQuery();
   const [deleteAuthor] = useDeleteAuthorMutation();
 
-  const handleDelete = async (id: string) => {
-    await deleteAuthor(id);
+  const handleDelete = (id: string) => {
+    Modal.confirm({
+      title: "Delete author?",
+      content: "This action cannot be undone.",
+      okText: "Delete",
+      okType: "danger",
+      onOk: async () => {
+        try {
+          await deleteAuthor(id).unwrap();
+          message.success("Author deleted");
+        } catch {
+          message.error("Failed to delete author");
+        }
+      },
+    });
   };
 
   if (isLoading) return <p className="p-10">Loading...</p>;
@@ -45,31 +58,24 @@ const AuthorsPage = () => {
           {data?.map((author) => (
             <tr key={author.id}>
               <td className="border border-gray-300 p-2">
-                {author?.firstName + " " + author?.lastName}
+                {author.firstName + " " + author.lastName}
               </td>
               <td className="border border-gray-300 p-2">
-                {author?.phoneNumber}
+                {author.phoneNumber}
               </td>
-
               <td className="border w-[300px] border-gray-300 p-2">
-                {author.worksAt ? author.worksAt : "-"}
+                {author.worksAt ?? "-"}
               </td>
-
               <td className="border w-[300px] border-gray-300 p-2">
-                {author.studiesAt ? author.studiesAt : "-"}
+                {author.studiesAt ?? "-"}
               </td>
-
               <td className="border border-gray-300 p-2 flex gap-2">
-                <button
-                  className=" cursor-pointer px-3 py-1 rounded border border-blue-500 "
+                <Link
+                  href={`/authors/${author.id}`}
+                  className="cursor-pointer px-3 py-1 rounded border border-blue-500 text-blue-500"
                 >
-                  <Link
-                    href={`/authors/${author.id}`}
-                    className="text-blue-500"
-                  >
-                    <p className="cursor-pointer ">Edit</p>
-                  </Link>
-                </button>
+                  Edit
+                </Link>
                 <button
                   onClick={() => handleDelete(author.id)}
                   className="bg-red-500 cursor-pointer text-white px-2 py-1 rounded"
