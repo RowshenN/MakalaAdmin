@@ -1,28 +1,23 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Issue, IssuesResponse, IssueWithArticles } from "@/types/issue";
+import { API_URL } from "./config";
 
 export const issueApi = createApi({
   reducerPath: "issueApi",
-  baseQuery: fetchBaseQuery({
-      baseUrl: "http://72.62.243.185/"
-      // baseUrl: "http://localhost:5000/"
-  }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   tagTypes: ["Issue"],
 
   endpoints: (builder) => ({
-    // ✅ GET ALL
     getIssues: builder.query<IssuesResponse, void>({
       query: () => "issue",
       providesTags: ["Issue"],
     }),
 
-    // ✅ GET ONE (🔥 FIX HERE)
    getIssueById: builder.query<IssueWithArticles, string>({
       query: (id) => `issue/${id}`,
       providesTags: (result, error, id) => [{ type: "Issue", id }],
     }),
 
-    // ✅ CREATE
     createIssue: builder.mutation({
       query: (formData) => ({
         url: "issue",
@@ -32,7 +27,6 @@ export const issueApi = createApi({
       invalidatesTags: ["Issue"],
     }),
 
-    // ✅ UPDATE (🔥 FIX HERE)
     updateIssue: builder.mutation({
       query: ({ id, body }) => ({
         url: `issue/${id}`,
@@ -41,11 +35,10 @@ export const issueApi = createApi({
       }),
       invalidatesTags: (result, error, { id }) => [
         { type: "Issue", id },
-        "Issue", // also refresh list
+        "Issue",
       ],
     }),
 
-    // ✅ DELETE
     deleteIssue: builder.mutation({
       query: (id) => ({
         url: `issue/${id}`,

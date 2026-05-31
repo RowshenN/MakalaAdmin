@@ -1,11 +1,21 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   useGetAuthorByIdQuery,
   useUpdateAuthorMutation,
 } from "@/services/authorApi";
+import { message } from "antd";
+import { useForm } from "@/hooks/useForm";
+
+const initialForm = {
+  firstName: "",
+  lastName: "",
+  worksAt: "",
+  studiesAt: "",
+  phoneNumber: "",
+};
 
 const UpdateAuthorPage = () => {
   const { id } = useParams();
@@ -14,13 +24,7 @@ const UpdateAuthorPage = () => {
   const { data, isLoading } = useGetAuthorByIdQuery(id as string);
   const [updateAuthor, { isLoading: isUpdating }] = useUpdateAuthorMutation();
 
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    worksAt: "",
-    studiesAt: "",
-    phoneNumber: "",
-  });
+  const { form, setForm, handleChange } = useForm(initialForm);
 
   useEffect(() => {
     if (data) {
@@ -34,33 +38,28 @@ const UpdateAuthorPage = () => {
     }
   }, [data]);
 
-  const handleChange = (e: any) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await updateAuthor({
-      id,
-      data: form,
-    });
-
-    router.push("/authors");
+    try {
+      await updateAuthor({ id, data: form }).unwrap();
+      message.success("Author updated successfully");
+      router.push("/authors");
+    } catch (err) {
+      message.error("Failed to update author");
+      console.error(err);
+    }
   };
 
   if (isLoading) return <p className="p-10">Loading...</p>;
 
   return (
-    <div className="p-10 text-black w-full ">
+    <div className="p-10 text-black w-full">
       <h1 className="text-2xl font-bold mb-6">Update Author</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
-        <div className="flex gap-2 items-center w-full justify-start ">
-          <label className="whitespace-nowrap ">First Name :</label>
+        <div className="flex gap-2 items-center w-full justify-start">
+          <label className="whitespace-nowrap">First Name :</label>
           <input
             name="firstName"
             value={form.firstName}
@@ -69,8 +68,8 @@ const UpdateAuthorPage = () => {
           />
         </div>
 
-        <div className="flex gap-2 items-center w-full justify-start ">
-          <label className="whitespace-nowrap ">Last :</label>
+        <div className="flex gap-2 items-center w-full justify-start">
+          <label className="whitespace-nowrap">Last :</label>
           <input
             name="lastName"
             value={form.lastName}
@@ -79,8 +78,8 @@ const UpdateAuthorPage = () => {
           />
         </div>
 
-        <div className="flex gap-2 items-center w-full justify-start ">
-          <label className="whitespace-nowrap ">PhoneNumber :</label>
+        <div className="flex gap-2 items-center w-full justify-start">
+          <label className="whitespace-nowrap">PhoneNumber :</label>
           <input
             name="phoneNumber"
             placeholder="Phone Number"
@@ -90,8 +89,8 @@ const UpdateAuthorPage = () => {
           />
         </div>
 
-        <div className="flex gap-2 items-center w-full justify-start ">
-          <label className="whitespace-nowrap ">Works At :</label>
+        <div className="flex gap-2 items-center w-full justify-start">
+          <label className="whitespace-nowrap">Works At :</label>
           <input
             name="worksAt"
             value={form.worksAt}
@@ -100,8 +99,8 @@ const UpdateAuthorPage = () => {
           />
         </div>
 
-        <div className="flex gap-2 items-center w-full justify-start ">
-          <label className="whitespace-nowrap ">Studies At :</label>
+        <div className="flex gap-2 items-center w-full justify-start">
+          <label className="whitespace-nowrap">Studies At :</label>
           <input
             name="studiesAt"
             value={form.studiesAt}

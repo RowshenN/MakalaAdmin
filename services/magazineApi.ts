@@ -1,27 +1,22 @@
 import { Magazine } from "@/types/magazine";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { API_URL } from "./config";
 
 export const magazineApi = createApi({
   reducerPath: "magazineApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://72.62.243.185/"
-    // baseUrl: "http://localhost:5000/"
-  }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   tagTypes: ["Magazine"],
 
   endpoints: (builder) => ({
-    // ✅ GET ALL
     getMagazines: builder.query<Magazine[], void>({
       query: () => "magazine",
       providesTags: ["Magazine"],
     }),
 
-    // ✅ GET ONE
     getMagazineById: builder.query<Magazine, string>({
       query: (id) => `magazine/${id}`,
     }),
 
-    // ✅ CREATE
     createMagazine: builder.mutation({
       query: (data) => ({
         url: "magazine",
@@ -31,7 +26,6 @@ export const magazineApi = createApi({
       invalidatesTags: ["Magazine"],
     }),
 
-    // ✅ UPDATE
     updateMagazine: builder.mutation({
       query: ({ id, data }) => ({
         url: `magazine/${id}`,
@@ -41,7 +35,6 @@ export const magazineApi = createApi({
       invalidatesTags: ["Magazine"],
     }),
 
-    // ✅ DELETE
     deleteMagazine: builder.mutation({
       query: (id) => ({
         url: `magazine/${id}`,

@@ -6,13 +6,27 @@ import {
   useDeleteCategoryMutation,
 } from "@/services/categoryApi";
 import { Category } from "@/types/category";
+import { message, Modal } from "antd";
 
 const CategoriesPage = () => {
   const { data, isLoading, isError } = useGetCategoriesQuery();
   const [deleteCategory] = useDeleteCategoryMutation();
 
-  const handleDelete = async (id: string) => {
-    await deleteCategory(id);
+  const handleDelete = (id: string) => {
+    Modal.confirm({
+      title: "Delete category?",
+      content: "This action cannot be undone.",
+      okText: "Delete",
+      okType: "danger",
+      onOk: async () => {
+        try {
+          await deleteCategory(id).unwrap();
+          message.success("Category deleted");
+        } catch {
+          message.error("Failed to delete category");
+        }
+      },
+    });
   };
 
   if (isLoading) return <p className="p-10">Loading...</p>;
@@ -37,7 +51,7 @@ const CategoriesPage = () => {
             key={cat.id}
             className="flex justify-between border-b border-gray-300 py-3"
           >
-            <span className="text-black ">{cat.name}</span>
+            <span className="text-black">{cat.name}</span>
 
             <div className="flex gap-3">
               <Link href={`/categories/${cat.id}`} className="text-blue-500">
