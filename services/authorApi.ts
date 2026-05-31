@@ -1,10 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { Author } from "@/types/author";
-import { API_URL } from "./config";
+import { createBaseQueryWithReauth } from "./baseQuery";
 
 export const authorApi = createApi({
   reducerPath: "authorApi",
-  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
+  baseQuery: createBaseQueryWithReauth(""),
   tagTypes: ["Author"],
 
   endpoints: (builder) => ({

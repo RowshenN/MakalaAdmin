@@ -1,10 +1,10 @@
 import { Magazine } from "@/types/magazine";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { API_URL } from "./config";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { createBaseQueryWithReauth } from "./baseQuery";
 
 export const magazineApi = createApi({
   reducerPath: "magazineApi",
-  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
+  baseQuery: createBaseQueryWithReauth(""),
   tagTypes: ["Magazine"],
 
   endpoints: (builder) => ({
