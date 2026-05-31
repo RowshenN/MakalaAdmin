@@ -3,8 +3,8 @@ import { Article } from "@/types/article";
 
 export const articleApi = createApi({
   reducerPath: "articleApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://72.62.243.185/"  + "article/" }),
-  // baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/"  + "article/" }),
+  // baseQuery: fetchBaseQuery({ baseUrl: "http://72.62.243.185/"  + "article/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/"  + "article/" }),
   tagTypes: ["Article"],
   endpoints: (builder) => ({
     // GET ALL ARTICLES

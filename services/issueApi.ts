@@ -4,8 +4,8 @@ import { Issue, IssuesResponse, IssueWithArticles } from "@/types/issue";
 export const issueApi = createApi({
   reducerPath: "issueApi",
   baseQuery: fetchBaseQuery({
-      baseUrl: "http://72.62.243.185/"
-      // baseUrl: "http://localhost:5000/"
+      // baseUrl: "http://72.62.243.185/"
+      baseUrl: "http://localhost:5000/"
   }),
   tagTypes: ["Issue"],
 

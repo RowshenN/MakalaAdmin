@@ -136,8 +136,8 @@ const TipTapEditor = ({ content, onChange }: Props) => {
     formData.append("image", file);
 
     try {
-      const res = await fetch("http://72.62.243.185/" + "upload", {
-      // const res = await fetch("http://localhost:5000/" + "upload", {
+      // const res = await fetch("http://72.62.243.185/" + "upload", {
+      const res = await fetch("http://localhost:5000/" + "upload", {
 
         method: "POST",
         body: formData,
